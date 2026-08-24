@@ -366,25 +366,63 @@ button, input, select, textarea {
   letter-spacing: 0.5px;
 }
 
-.hero-subtitle {
-  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
-  color: var(--text-muted);
-  line-height: 1.6;
+/* Presentation Card Dual-Tone Purple Blocks */
+.hero-bio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin-bottom: 28px;
+  z-index: 2;
+  position: relative;
+}
+
+.hero-bio-block {
+  padding: 16px 22px;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+  text-align: left;
+}
+
+/* Tone 1: Soft Lavender / Lilac Purple Box */
+.hero-bio-block-primary {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(155, 99, 198, 0.22);
+  border-left: 5px solid var(--accent-purple);
+  box-shadow: 0 4px 14px rgba(59, 44, 84, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.hero-bio-block-primary:hover {
+  border-color: rgba(155, 99, 198, 0.4);
+  box-shadow: 0 6px 18px rgba(155, 99, 198, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Tone 2: Deeper Velvet Violet / Plum Purple Box */
+.hero-bio-block-secondary {
+  background: linear-gradient(135deg, rgba(59, 44, 84, 0.09) 0%, rgba(155, 99, 198, 0.18) 100%);
+  border: 1px solid rgba(59, 44, 84, 0.18);
+  border-left: 5px solid var(--primary-dark);
+  box-shadow: 0 4px 14px rgba(59, 44, 84, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.hero-bio-block-secondary:hover {
+  border-color: var(--primary-dark);
+  box-shadow: 0 6px 18px rgba(59, 44, 84, 0.12);
+  transform: translateY(-2px);
+}
+
+.hero-bio-text {
+  font-size: clamp(0.92rem, 1.6vw, 1rem);
+  color: var(--text-main);
+  line-height: 1.65;
   font-weight: 400;
 }
 
-.hero-pill-badge {
-  display: inline-block;
-  background: var(--primary-dark);
-  color: #FFFFFF;
-  padding: 16px 28px;
-  border-radius: var(--radius-pill);
-  font-size: clamp(0.85rem, 1.6vw, 0.95rem);
-  font-weight: 600;
-  line-height: 1.4;
-  margin-bottom: 32px;
-  box-shadow: var(--shadow-sm);
+.hero-bio-block-secondary .hero-bio-text strong {
+  color: var(--primary-dark);
+  font-weight: 700;
 }
 
 .hero-actions {
@@ -563,12 +601,17 @@ button, input, select, textarea {
   background: var(--primary-dark);
 }
 
-/* --- Procedimentos (Services) Section --- */
 .procedimentos-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
   margin-bottom: 48px;
+}
+
+@media (min-width: 992px) {
+  .procedimentos-grid > .procedure-card:last-child:nth-child(3n+1) {
+    grid-column: 2;
+  }
 }
 
 .procedure-card {
@@ -591,8 +634,8 @@ button, input, select, textarea {
 }
 
 .procedure-icon-box {
-  width: 64px;
-  height: 64px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   background: var(--accent-light);
   color: var(--primary-dark);
@@ -603,9 +646,21 @@ button, input, select, textarea {
   transition: var(--transition-fast);
 }
 
+.procedure-icon-img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  transition: var(--transition-fast);
+}
+
 .procedure-card:hover .procedure-icon-box {
   background: var(--primary-dark);
   color: #FFFFFF;
+}
+
+.procedure-card:hover .procedure-icon-img {
+  filter: brightness(0) invert(1);
+  transform: scale(1.08);
 }
 
 .procedure-title {
@@ -1298,7 +1353,8 @@ button, input, select, textarea {
     padding: 44px 28px;
   }
 
-  .hero-pill-badge {
+  .hero-bio-container {
+    max-width: 580px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -1317,6 +1373,13 @@ button, input, select, textarea {
 
   .procedimentos-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .procedimentos-grid > .procedure-card:last-child:nth-child(2n+1) {
+    grid-column: span 2;
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .gallery-grid {

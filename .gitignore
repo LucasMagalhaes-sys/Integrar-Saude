@@ -1,0 +1,11 @@
+# Memory & Project tracking files
+.memory.json
+.project_memory.md
+.memory*
+.project-memory*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
