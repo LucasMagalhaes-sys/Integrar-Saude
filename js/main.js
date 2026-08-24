@@ -18,29 +18,197 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.querySelector('.menu-toggle');
   const navLinks = document.querySelector('.nav-links');
 
-  if (menuToggle && navLinks) {
-    menuToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      menuToggle.classList.toggle('active');
-      navLinks.classList.toggle('mobile-open');
-    });
+  function closeMobileMenu() {
+    if (menuToggle && navLinks) {
+      menuToggle.classList.remove('active');
+      navLinks.classList.remove('mobile-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-locked');
+    }
+  }
 
-    document.querySelectorAll('.nav-link').forEach(link => {
+  function toggleMobileMenu(e) {
+    if (e) e.stopPropagation();
+    if (menuToggle && navLinks) {
+      const isOpen = navLinks.classList.toggle('mobile-open');
+      menuToggle.classList.toggle('active', isOpen);
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      document.body.classList.toggle('menu-locked', isOpen);
+    }
+  }
+
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', toggleMobileMenu);
+
+    // Close menu when clicking any nav link or CTA button inside menu
+    document.querySelectorAll('.nav-link, .mobile-nav-cta').forEach(link => {
       link.addEventListener('click', () => {
-        menuToggle.classList.remove('active');
-        navLinks.classList.remove('mobile-open');
+        closeMobileMenu();
       });
     });
 
+    // Close menu when clicking outside
     document.addEventListener('click', (e) => {
       if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
-        menuToggle.classList.remove('active');
-        navLinks.classList.remove('mobile-open');
+        closeMobileMenu();
+      }
+    });
+
+    // Close menu on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+    });
+
+    // Close menu when viewport is resized back to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 991) {
+        closeMobileMenu();
       }
     });
   }
 
-  // 3. Testimonial Dots Navigation
+  // 3. Clinic Images Carousel
+  const clinicTrack = document.getElementById('clinicCarouselTrack');
+  const clinicPrevBtn = document.getElementById('clinicPrevBtn');
+  const clinicNextBtn = document.getElementById('clinicNextBtn');
+  const clinicDotsContainer = document.getElementById('clinicCarouselDots');
+
+  if (clinicTrack) {
+    const slides = clinicTrack.querySelectorAll('.clinic-slide');
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+    let autoSlideTimer = null;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function getVisibleSlides() {
+      const width = window.innerWidth;
+      if (width > 991) return 3;
+      if (width > 767) return 2;
+      return 1;
+    }
+
+    function getMaxIndex() {
+      return Math.max(0, totalSlides - getVisibleSlides());
+    }
+
+    function createDots() {
+      if (!clinicDotsContainer) return;
+      clinicDotsContainer.innerHTML = '';
+      const maxIdx = getMaxIndex();
+      for (let i = 0; i <= maxIdx; i++) {
+        const dot = document.createElement('button');
+        dot.className = `clinic-dot ${i === currentIndex ? 'active' : ''}`;
+        dot.setAttribute('aria-label', `Ir para slide ${i + 1}`);
+        dot.addEventListener('click', () => {
+          goToSlide(i);
+          resetAutoSlide();
+        });
+        clinicDotsContainer.appendChild(dot);
+      }
+    }
+
+    function updateDots() {
+      if (!clinicDotsContainer) return;
+      const dots = clinicDotsContainer.querySelectorAll('.clinic-dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentIndex);
+      });
+    }
+
+    function updateCarousel() {
+      const visible = getVisibleSlides();
+      const maxIdx = getMaxIndex();
+      if (currentIndex > maxIdx) {
+        currentIndex = maxIdx;
+      }
+      const percentage = (currentIndex * (100 / visible));
+      clinicTrack.style.transform = `translateX(-${percentage}%)`;
+      updateDots();
+    }
+
+    function goToSlide(index) {
+      const maxIdx = getMaxIndex();
+      if (index < 0) {
+        currentIndex = maxIdx;
+      } else if (index > maxIdx) {
+        currentIndex = 0;
+      } else {
+        currentIndex = index;
+      }
+      updateCarousel();
+    }
+
+    if (clinicPrevBtn) {
+      clinicPrevBtn.addEventListener('click', () => {
+        goToSlide(currentIndex - 1);
+        resetAutoSlide();
+      });
+    }
+
+    if (clinicNextBtn) {
+      clinicNextBtn.addEventListener('click', () => {
+        goToSlide(currentIndex + 1);
+        resetAutoSlide();
+      });
+    }
+
+    // Touch Swipe Support
+    clinicTrack.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      stopAutoSlide();
+    }, { passive: true });
+
+    clinicTrack.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) {
+          goToSlide(currentIndex + 1);
+        } else {
+          goToSlide(currentIndex - 1);
+        }
+      }
+      startAutoSlide();
+    }, { passive: true });
+
+    // Auto Slide
+    function startAutoSlide() {
+      stopAutoSlide();
+      autoSlideTimer = setInterval(() => {
+        goToSlide(currentIndex + 1);
+      }, 4500);
+    }
+
+    function stopAutoSlide() {
+      if (autoSlideTimer) {
+        clearInterval(autoSlideTimer);
+        autoSlideTimer = null;
+      }
+    }
+
+    function resetAutoSlide() {
+      stopAutoSlide();
+      startAutoSlide();
+    }
+
+    clinicTrack.parentElement.addEventListener('mouseenter', stopAutoSlide);
+    clinicTrack.parentElement.addEventListener('mouseleave', startAutoSlide);
+
+    window.addEventListener('resize', () => {
+      createDots();
+      updateCarousel();
+    });
+
+    // Initialize
+    createDots();
+    updateCarousel();
+    startAutoSlide();
+  }
+
+  // 4. Testimonial Dots Navigation
   const dots = document.querySelectorAll('.carousel-dots .dot');
   const testimonials = document.querySelectorAll('.testimonial-card');
 
@@ -63,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 4. Modal Dialogs (Booking & E-book Downloads)
+  // 5. Modal Dialogs (Booking & E-book Downloads)
   const bookingModal = document.getElementById('bookingModal');
   const ebookModal = document.getElementById('ebookModal');
 

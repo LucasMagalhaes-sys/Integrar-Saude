@@ -35,20 +35,21 @@
         </div>
       </a>
 
-      <nav class="nav-links">
+      <nav class="nav-links" id="navLinks">
         <a href="#inicio" class="nav-link">Início</a>
         <a href="#sobre" class="nav-link">Sobre Mim</a>
         <a href="#procedimentos" class="nav-link">Procedimentos</a>
         <a href="#depoimentos" class="nav-link">Depoimentos</a>
         <a href="#materiais" class="nav-link">Materiais</a>
         <a href="#localizacao" class="nav-link">Contato</a>
+        <a href="#agendar" class="btn btn-accent mobile-nav-cta open-booking-modal">Agendar Consulta</a>
       </nav>
 
       <div class="nav-cta">
         <a href="#agendar" class="btn btn-accent open-booking-modal">Agendar</a>
       </div>
 
-      <button class="menu-toggle" aria-label="Abrir Menu">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir Menu" aria-expanded="false" aria-controls="navLinks">
         <span></span>
         <span></span>
         <span></span>
@@ -256,8 +257,8 @@
       </div>
     </section>
 
-    <!-- ==================== NOSSO ESPAÇO / CLÍNICA ==================== -->
-    <section class="section" id="sobre" style="background-color: var(--accent-lighter);">
+    <!-- ==================== NOSSO ESPAÇO / CLÍNICA (CARROSSEL) ==================== -->
+    <section class="section clinic-section" id="sobre" style="background-color: var(--accent-lighter);">
       <div class="container text-center">
         <span class="section-badge">Nosso Espaço</span>
         <h2 class="section-title">Conheça Nossa Clínica</h2>
@@ -265,48 +266,103 @@
           Estrutura completa, moderna e sofisticada concebida para oferecer uma experiência de bem-estar inesquecível.
         </p>
 
-        <div class="gallery-grid">
-          <div class="gallery-item">
-            <img src="images/clinica-1.jpg" alt="Sala de Atendimento Estético" class="gallery-img">
-            <div class="gallery-overlay">
-              <span class="gallery-caption">Salas de Atendimento Privativas</span>
+        <div class="clinic-carousel-container">
+          <button class="carousel-btn prev-btn" id="clinicPrevBtn" aria-label="Imagem Anterior">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <div class="clinic-carousel-viewport" id="clinicCarouselViewport">
+            <div class="clinic-carousel-track" id="clinicCarouselTrack">
+              <!-- Slide 1 -->
+              <div class="clinic-slide">
+                <div class="gallery-item">
+                  <img src="images/clinica-1.jpg" alt="Salas de Atendimento Privativas" class="gallery-img" loading="lazy">
+                  <div class="gallery-overlay">
+                    <span class="gallery-caption">Salas de Atendimento Privativas</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 2 -->
+              <div class="clinic-slide">
+                <div class="gallery-item">
+                  <img src="images/clinica-2.jpg" alt="Consultório Principal Dra. Antonia" class="gallery-img" loading="lazy">
+                  <div class="gallery-overlay">
+                    <span class="gallery-caption">Consultório Integrativo & LED Design</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 3 -->
+              <div class="clinic-slide">
+                <div class="gallery-item">
+                  <img src="images/clinica-3.jpg" alt="Recepção & Lounge de Boas-Vindas" class="gallery-img" loading="lazy">
+                  <div class="gallery-overlay">
+                    <span class="gallery-caption">Recepção & Lounge de Boas-Vindas</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 4 -->
+              <div class="clinic-slide">
+                <div class="gallery-item">
+                  <img src="images/clinica-4.jpg" alt="Espaço Clínico & Tecnologia Integrativa" class="gallery-img" loading="lazy">
+                  <div class="gallery-overlay">
+                    <span class="gallery-caption">Espaço Clínico & Tecnologia Integrativa</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 5 -->
+              <div class="clinic-slide">
+                <div class="gallery-item">
+                  <img src="images/clinica-5.jpg" alt="Ambiente Acolhedor & Sofisticado" class="gallery-img" loading="lazy">
+                  <div class="gallery-overlay">
+                    <span class="gallery-caption">Ambiente Acolhedor & Sofisticado</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 6 -->
+              <div class="clinic-slide">
+                <div class="gallery-item">
+                  <img src="images/clinica-6.jpg" alt="Estrutura Moderna em Alphaville" class="gallery-img" loading="lazy">
+                  <div class="gallery-overlay">
+                    <span class="gallery-caption">Estrutura Moderna em Alphaville</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="gallery-item featured">
-            <img src="images/clinica-2.jpg" alt="Consultório Principal Dra Antonia" class="gallery-img">
-            <div class="gallery-overlay">
-              <span class="gallery-caption">Consultório Integrativo & LED Design</span>
-            </div>
-          </div>
+          <button class="carousel-btn next-btn" id="clinicNextBtn" aria-label="Próxima Imagem">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
 
-          <div class="gallery-item">
-            <img src="images/clinica-3.jpg" alt="Recepção e Lounge" class="gallery-img">
-            <div class="gallery-overlay">
-              <span class="gallery-caption">Recepção & Lounge de Boas-Vindas</span>
-            </div>
-          </div>
+        <div class="clinic-carousel-dots" id="clinicCarouselDots">
+          <!-- Dots inseridos dinamicamente pelo JS -->
         </div>
       </div>
     </section>
 
-    <!-- ==================== MATERIAIS GRATUITOS / EBOOKS ==================== -->
+    <!-- ==================== MATERIAIS EXCLUSIVOS / EBOOKS ==================== -->
     <section class="section" id="materiais">
       <div class="container text-center">
-        <span class="section-badge">Conteúdo Gratuito</span>
-        <h2 class="section-title">Leve Meu Material Para Casa</h2>
+        <span class="section-badge">Materiais Exclusivos</span>
+        <h2 class="section-title">MATERIAIS EXCLUSIVOS</h2>
         <p class="section-subtitle">
-          E-books e guias exclusivos para você cultivar hábitos saudáveis e cuidar da sua pele diariamente.
+          Livros e guias exclusivos para você cultivar hábitos saudáveis e cuidar da sua saúde e beleza diariamente.
         </p>
 
         <div class="ebooks-wrapper text-left">
-          <!-- Ebook 1 -->
+          <!-- Livro 1: Alimentos do Coração -->
           <div class="ebook-card">
             <div class="ebook-cover-wrapper">
-              <img src="images/ebook-coracao.jpg" alt="Ebook Alimentos do Coração" class="ebook-cover-img">
+              <img src="images/ebook-coracao.jpg" alt="Livro Alimentos do Coração" class="ebook-cover-img">
             </div>
             <div class="ebook-info">
-              <h3 class="ebook-title">ALIMENTOS DO CORAÇÃO</h3>
+              <h3 class="ebook-title">LIVRO ALIMENTOS DO CORAÇÃO</h3>
               <p class="ebook-desc">
                 Descubra como a nutrição funcional pode ser a sua maior aliada contra o envelhecimento precoce e doenças cardiovasculares.
               </p>
@@ -315,16 +371,16 @@
                 <li><span class="check-icon">✓</span> Receitas práticas para o dia a dia</li>
                 <li><span class="check-icon">✓</span> Dicas para reduzir a inflamação corporal</li>
               </ul>
-              <button class="btn btn-accent open-ebook-modal" data-ebook="ALIMENTOS DO CORAÇÃO">
+              <a href="https://wa.me/5511996136647?text=Gostaria%20de%20adquirir%20o%20livro%20Alimentos%20do%20Cora%C3%A7%C3%A3o" target="_blank" rel="noopener noreferrer" class="btn btn-accent">
                 GARANTA JÁ O SEU
-              </button>
+              </a>
             </div>
           </div>
 
-          <!-- Ebook 2 -->
+          <!-- Ebook 2: Conheça sua pele -->
           <div class="ebook-card reverse">
             <div class="ebook-info">
-              <h3 class="ebook-title">CONHEÇA SUA PELE</h3>
+              <h3 class="ebook-title">E-BOOK CONHEÇA SUA PELE</h3>
               <p class="ebook-desc">
                 Descubra como a nutrição funcional e cuidados adequados podem transformar a saúde, firmeza e viço da sua pele.
               </p>
@@ -333,9 +389,9 @@
                 <li><span class="check-icon">✓</span> Receitas práticas para o dia a dia</li>
                 <li><span class="check-icon">✓</span> Dicas para reduzir a inflamação corporal</li>
               </ul>
-              <button class="btn btn-accent open-ebook-modal" data-ebook="CONHEÇA SUA PELE">
+              <a href="https://hotmart.com/pt-br/marketplace/produtos/conheca-sua-pele/C85906503F?sck=HOTMART_SITE" target="_blank" rel="noopener noreferrer" class="btn btn-accent">
                 GARANTA JÁ O SEU
-              </button>
+              </a>
             </div>
             <div class="ebook-cover-wrapper">
               <img src="images/ebook-pele.jpg" alt="Ebook Conheça sua pele" class="ebook-cover-img">
@@ -405,6 +461,7 @@
           <a href="#depoimentos" class="footer-link">Depoimentos</a>
           <a href="#materiais" class="footer-link">Materiais</a>
           <a href="#localizacao" class="footer-link">Contato</a>
+          <a href="https://www.youtube.com/@Dra.antoniavalero" target="_blank" rel="noopener noreferrer" class="footer-link">YouTube</a>
           <a href="https://linktr.ee/antoniavalero" target="_blank" rel="noopener noreferrer" class="footer-link">Linktree</a>
         </div>
 
@@ -414,6 +471,11 @@
           </a>
           <a href="https://wa.me/5511996136647" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="WhatsApp" title="WhatsApp Dra. Antonia Valero">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          </a>
+          <a href="https://www.youtube.com/@Dra.antoniavalero" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube" title="YouTube @Dra.antoniavalero">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
           </a>
           <a href="https://linktr.ee/antoniavalero" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Linktree" title="Linktree Dra. Antonia Valero">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="m13.736 5.853 4.005-4.117 2.325 2.38-4.2 4.007h5.908v3.305h-5.937l4.229 4.108-2.325 2.38-4.005-4.117v6.874h-3.472v-6.874l-4.005 4.117-2.325-2.38 4.229-4.108H2.226V8.123h5.908l-4.2-4.007 2.325-2.38 4.005 4.117V0h3.472v5.853z"/></svg>
