@@ -69,17 +69,135 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Clinic Images Carousel
+  // 3. Clinic Images Carousel & Interactive Lightbox Gallery
   const clinicTrack = document.getElementById('clinicCarouselTrack');
   const clinicPrevBtn = document.getElementById('clinicPrevBtn');
   const clinicNextBtn = document.getElementById('clinicNextBtn');
   const clinicDotsContainer = document.getElementById('clinicCarouselDots');
 
+  // Lightbox Elements
+  const clinicLightbox = document.getElementById('clinicLightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+  const lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
+  const lightboxNextBtn = document.getElementById('lightboxNextBtn');
+  const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+  const lightboxCounter = document.getElementById('lightboxCounter');
+
+  const galleryImages = [
+    'images/clinica-1.jpg',
+    'images/clinica-2.jpg',
+    'images/clinica-3.jpg',
+    'images/clinica-4.jpg',
+    'images/clinica-5.jpg',
+    'images/clinica-6.jpg'
+  ];
+
+  let currentLightboxIndex = 0;
+
+  function openLightbox(index) {
+    if (!clinicLightbox || !lightboxImg) return;
+    currentLightboxIndex = (index + galleryImages.length) % galleryImages.length;
+    lightboxImg.src = galleryImages[currentLightboxIndex];
+    if (lightboxCounter) {
+      lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${galleryImages.length}`;
+    }
+    clinicLightbox.classList.add('active');
+    document.body.classList.add('menu-locked');
+    stopAutoSlide();
+  }
+
+  function closeLightbox() {
+    if (!clinicLightbox) return;
+    clinicLightbox.classList.remove('active');
+    document.body.classList.remove('menu-locked');
+    startAutoSlide();
+  }
+
+  function nextLightbox() {
+    openLightbox(currentLightboxIndex + 1);
+  }
+
+  function prevLightbox() {
+    openLightbox(currentLightboxIndex - 1);
+  }
+
+  if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+  if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', nextLightbox);
+  if (lightboxPrevBtn) lightboxPrevBtn.addEventListener('click', prevLightbox);
+
+  // Attach Lightbox Triggers
+  document.querySelectorAll('.gallery-lightbox-trigger').forEach((trigger, idx) => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const index = parseInt(trigger.getAttribute('data-index') || idx, 10);
+      openLightbox(index);
+    });
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const index = parseInt(trigger.getAttribute('data-index') || idx, 10);
+        openLightbox(index);
+      }
+    });
+  });
+
+  // Carousel Slider Logic
+  let autoSlideTimer = null;
+
+  function startAutoSlide() {
+    stopAutoSlide();
+    autoSlideTimer = setInterval(() => {
+      goToSlide(currentIndex + 1);
+    }, 4500);
+  }
+
+  function stopAutoSlide() {
+    if (autoSlideTimer) {
+      clearInterval(autoSlideTimer);
+      autoSlideTimer = null;
+    }
+  }
+
+  function resetAutoSlide() {
+    stopAutoSlide();
+    startAutoSlide();
+  }
+
+  let currentIndex = 0;
+
+  function goToSlide(index) {
+    if (!clinicTrack) return;
+    const slides = clinicTrack.querySelectorAll('.clinic-slide');
+    const totalSlides = slides.length;
+    const width = window.innerWidth;
+    const visible = width > 991 ? 3 : (width > 767 ? 2 : 1);
+    const maxIdx = Math.max(0, totalSlides - visible);
+
+    if (index < 0) {
+      currentIndex = maxIdx;
+    } else if (index > maxIdx) {
+      currentIndex = 0;
+    } else {
+      currentIndex = index;
+    }
+
+    const percentage = (currentIndex * (100 / visible));
+    clinicTrack.style.transform = `translateX(-${percentage}%)`;
+
+    if (clinicDotsContainer) {
+      const dots = clinicDotsContainer.querySelectorAll('.clinic-dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentIndex);
+      });
+    }
+  }
+
   if (clinicTrack) {
     const slides = clinicTrack.querySelectorAll('.clinic-slide');
     const totalSlides = slides.length;
-    let currentIndex = 0;
-    let autoSlideTimer = null;
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -110,37 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function updateDots() {
-      if (!clinicDotsContainer) return;
-      const dots = clinicDotsContainer.querySelectorAll('.clinic-dot');
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentIndex);
-      });
-    }
-
-    function updateCarousel() {
-      const visible = getVisibleSlides();
-      const maxIdx = getMaxIndex();
-      if (currentIndex > maxIdx) {
-        currentIndex = maxIdx;
-      }
-      const percentage = (currentIndex * (100 / visible));
-      clinicTrack.style.transform = `translateX(-${percentage}%)`;
-      updateDots();
-    }
-
-    function goToSlide(index) {
-      const maxIdx = getMaxIndex();
-      if (index < 0) {
-        currentIndex = maxIdx;
-      } else if (index > maxIdx) {
-        currentIndex = 0;
-      } else {
-        currentIndex = index;
-      }
-      updateCarousel();
-    }
-
     if (clinicPrevBtn) {
       clinicPrevBtn.addEventListener('click', () => {
         goToSlide(currentIndex - 1);
@@ -155,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Touch Swipe Support
+    // Touch Swipe on Carousel Track
     clinicTrack.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
       stopAutoSlide();
@@ -174,37 +261,17 @@ document.addEventListener('DOMContentLoaded', () => {
       startAutoSlide();
     }, { passive: true });
 
-    // Auto Slide
-    function startAutoSlide() {
-      stopAutoSlide();
-      autoSlideTimer = setInterval(() => {
-        goToSlide(currentIndex + 1);
-      }, 4500);
-    }
-
-    function stopAutoSlide() {
-      if (autoSlideTimer) {
-        clearInterval(autoSlideTimer);
-        autoSlideTimer = null;
-      }
-    }
-
-    function resetAutoSlide() {
-      stopAutoSlide();
-      startAutoSlide();
-    }
-
+    // Hover Interaction: Pause auto-slide on hover
     clinicTrack.parentElement.addEventListener('mouseenter', stopAutoSlide);
     clinicTrack.parentElement.addEventListener('mouseleave', startAutoSlide);
 
     window.addEventListener('resize', () => {
       createDots();
-      updateCarousel();
+      goToSlide(currentIndex);
     });
 
-    // Initialize
     createDots();
-    updateCarousel();
+    goToSlide(0);
     startAutoSlide();
   }
 
@@ -263,9 +330,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      if (clinicLightbox && clinicLightbox.classList.contains('active')) closeLightbox();
       if (bookingModal) bookingModal.classList.remove('active');
       if (ebookModal) ebookModal.classList.remove('active');
       if (waChatBox) waChatBox.classList.remove('active');
+    } else if (clinicLightbox && clinicLightbox.classList.contains('active')) {
+      if (e.key === 'ArrowRight') nextLightbox();
+      if (e.key === 'ArrowLeft') prevLightbox();
     }
   });
 
