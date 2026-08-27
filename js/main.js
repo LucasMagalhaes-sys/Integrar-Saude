@@ -6,13 +6,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Header scroll effect
   const header = document.querySelector('.site-header');
+  let isScrolling = false;
+
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        if (header) {
+          header.classList.toggle('scrolled', window.scrollY > 20);
+        }
+        isScrolling = false;
+      });
+      isScrolling = true;
     }
-  });
+  }, { passive: true });
 
   // 2. Mobile & Tablet Navigation Toggle
   const menuToggle = document.querySelector('.menu-toggle');
@@ -315,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const ebookTitle = btn.getAttribute('data-ebook') || 'Alimentos do Coração';
       const targetTitleEl = document.getElementById('modalEbookTitle');
       if (targetTitleEl) targetTitleEl.textContent = ebookTitle;
-      if (ebookModal) ebookModal.classList.remove('active');
+      if (ebookModal) ebookModal.classList.add('active');
     });
   });
 
