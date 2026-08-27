@@ -347,16 +347,14 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
 
       const nameInput = bookingForm.querySelector('input[type="text"]');
-      const phoneInput = bookingForm.querySelector('input[type="tel"]');
       const procedureSelect = bookingForm.querySelector('select');
 
       const name = nameInput ? nameInput.value.trim() : '';
-      const userPhone = phoneInput ? phoneInput.value.trim() : '';
       const procedure = procedureSelect && procedureSelect.selectedIndex >= 0
         ? procedureSelect.options[procedureSelect.selectedIndex].text
         : '';
 
-      const message = `Olá! Me chamo *${name}* e gostaria de agendar uma avaliação. Procedimento de interesse: *${procedure}*. Meu telefone: ${userPhone}.`;
+      const message = `Olá! Me chamo *${name}* e gostaria de agendar uma avaliação. Procedimento de interesse: *${procedure}*.`;
       const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
 
       window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
