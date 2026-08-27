@@ -345,8 +345,25 @@ document.addEventListener('DOMContentLoaded', () => {
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('Obrigado! Seu agendamento foi pré-solicitado. Nossa equipe entrará em contato via WhatsApp em poucos minutos para confirmar a data.');
-      bookingModal.classList.remove('active');
+
+      const nameInput = bookingForm.querySelector('input[type="text"]');
+      const phoneInput = bookingForm.querySelector('input[type="tel"]');
+      const procedureSelect = bookingForm.querySelector('select');
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      const userPhone = phoneInput ? phoneInput.value.trim() : '';
+      const procedure = procedureSelect && procedureSelect.selectedIndex >= 0
+        ? procedureSelect.options[procedureSelect.selectedIndex].text
+        : '';
+
+      const message = `Olá! Me chamo *${name}* e gostaria de agendar uma avaliação. Procedimento de interesse: *${procedure}*. Meu telefone: ${userPhone}.`;
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+      if (bookingModal) {
+        bookingModal.classList.remove('active');
+      }
       bookingForm.reset();
     });
   }
@@ -355,8 +372,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (ebookForm) {
     ebookForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('Excelente! Enviamos o link do e-book gratuito diretamente para o seu e-mail e WhatsApp.');
-      ebookModal.classList.remove('active');
+
+      const nameInput = ebookForm.querySelector('input[type="text"]');
+      const emailInput = ebookForm.querySelector('input[type="email"]');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+
+      const ebookTitleEl = document.getElementById('modalEbookTitle');
+      const ebookTitle = ebookTitleEl ? ebookTitleEl.textContent.trim() : '';
+
+      const message = `Olá, acabei de me cadastrar para receber o e-book *${ebookTitle}*.`;
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+      if (ebookModal) {
+        ebookModal.classList.remove('active');
+      }
       ebookForm.reset();
     });
   }
